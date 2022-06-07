@@ -13,6 +13,36 @@ var requestOptions = {
 };
 
 window.onload = function () {
+    //added code for tenor api gif
+    // global variables
+//const searchEl = document.getElementById("search");
+//const submitButton = document.getElementById("submit");
+// api stuff
+const gifApiKey = "YOC5GD9RH1V8";
+const lmt = 1;
+
+function getApi(event) {
+    event.preventDefault();
+    
+    const searchElText = searchEl.value
+    const api_url = `https://g.tenor.com/v1/search?key=${gifApiKey}&q=${searchElText}&limit=${lmt}`;
+    
+    fetch(api_url)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (result) {
+            console.log(result);
+           this.renderGif(result);
+        });
+}
+
+//how to get to gif url
+function renderGif(result) {
+    let gifUrl = result.results[0].media[0].gif.url;
+    document.getElementById("gif").src= gifUrl;
+    console.log(result);
+}
     let movies = JSON.parse(localStorage.getItem("movies"));
     movies?.forEach(m => {
         renderResults(m);
