@@ -5,10 +5,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Nights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@500&display=swap"   rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+    <!-- <h1 class="text-3xl">Hello</h1> -->
+    <section class="nav" id="mainContain">
+        <div class="navmain flex justify-around">
+            <h1 class="MNtitle text-3xl font-bold">Movie Nights</h1>
+            <div class="formsection">
+                <form id="search-form" class="">
+                    <!-- <label for="search">Search Movie:</label> -->
+                    <input type="text" id="search" class="form-control pointer-events-auto rounded-full" autocomplete="off" placeholder="Search Movie...">
+                    <button class="submit-btn pointer-events-auto rounded-full" id="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+            </div>
+        </div>
+    </section>
+    <section class="main">
+      <div id="modals">
+
+      </div>
+      <div id="list" class="movieContainer">
+
+      </div>
+    </section>
+    <script src="https://kit.fontawesome.com/6d69bfd297.js" crossorigin="anonymous"></script>
     <script src="script.js"></script>
 </body>
 </html>
