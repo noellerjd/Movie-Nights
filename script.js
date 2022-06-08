@@ -4,7 +4,7 @@ var searchFormEl = document.querySelector('#search-form')
 var listEl = document.querySelector('#list')
 var mainContain = document.querySelector('#mainContain')
 var baseUrl = 'https://imdb-api.com'
-var apiKey = 'k_xha8cnzd'
+var apiKey = ''
 
 // boilerplate request options for imbd api
 var requestOptions = {
