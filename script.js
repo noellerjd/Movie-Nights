@@ -23,6 +23,29 @@ window.onload = function () {
     })
 }
 
+//access random viewing
+function getRandomMovie() {
+
+    // get random index value from the movies array found in local storage
+    const randomMovieIndex = Math.floor(Math.random() * movies.length);
+
+    // get random movie
+    const randomMovieSelected = movies[randomMovieIndex];
+
+    return randomMovieSelected;
+}
+
+//the result is obtained by passing the movies array through the function
+const randomMovieResult = getRandomMovie(movies);
+//for testing purposes console.log
+console.log(randomMovieResult);
+//create element to put randomMovieResult in
+var seeRandomMovieResult = document.createElement("p");
+seeRandomMovieResult.textContent = randomMovieResult;
+//needs to be appended here
+
+//end getRandomMovie
+
 // api tenor search event
 var submitSearch = (event) => {
     event.preventDefault()
@@ -91,7 +114,7 @@ async function getMovieObject(name) {
     return movie;
 }
 
-function addMovieToLS(movie) {
+function addMovieToLS(movie) {F
     if (localStorage.getItem("movies") == null) {
         localStorage.setItem("movies", "[]")
     }
