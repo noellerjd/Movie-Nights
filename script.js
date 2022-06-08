@@ -9,7 +9,6 @@ var apiKey = 'k_xha8cnzd'
 const gifApiKey = "YOC5GD9RH1V8";
 const lmt = 1;
 
-
 // boilerplate request options for imbd api
 var requestOptions = {
     method: 'GET',
