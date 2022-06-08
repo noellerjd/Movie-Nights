@@ -3,8 +3,12 @@ var submitButton = document.querySelector('#submit')
 var searchFormEl = document.querySelector('#search-form')
 var listEl = document.querySelector('#list')
 var mainContain = document.querySelector('#mainContain')
+var viewEl = document.querySelector('#view-button')
 var baseUrl = 'https://imdb-api.com'
 var apiKey = 'k_xha8cnzd'
+const gifApiKey = "YOC5GD9RH1V8";
+const lmt = 1;
+
 
 // boilerplate request options for imbd api
 var requestOptions = {
@@ -12,49 +16,20 @@ var requestOptions = {
     redirect: 'follow'
 };
 
+// load saved movies
 window.onload = function () {
-    //added code for tenor api gif
-    // global variables
-//const searchEl = document.getElementById("search");
-//const submitButton = document.getElementById("submit");
-// api stuff
-const gifApiKey = "YOC5GD9RH1V8";
-const lmt = 1;
-
-function getApi(event) {
-    event.preventDefault();
-    
-    const searchElText = searchEl.value
-    const api_url = `https://g.tenor.com/v1/search?key=${gifApiKey}&q=${searchElText}&limit=${lmt}`;
-    
-    fetch(api_url)
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (result) {
-            console.log(result);
-           this.renderGif(result);
-        });
-}
-
-//how to get to gif url
-function renderGif(result) {
-    let gifUrl = result.results[0].media[0].gif.url;
-    document.getElementById("gif").src= gifUrl;
-    console.log(result);
-}
     let movies = JSON.parse(localStorage.getItem("movies"));
     movies?.forEach(m => {
         renderResults(m);
     })
 }
 
-// api search event
+// api tenor search event
 var submitSearch = (event) => {
     event.preventDefault()
     
     if(searchEl.value == ''){ //will become a modal
-        alert("Please enter a movie name first!");
+        return;
     } else{ //search, then log response, take the response and run renderResults function
         getMovieObject(searchEl.value)
             .then(movie => {
@@ -72,7 +47,8 @@ async function getMovieObject(name) {
         description: null,
         image: null,
         trailer: null,
-        reviews: []
+        reviews: [],
+        gifs: null
     };
 
     await fetch(`https://imdb-api.com/API/SearchMovie/${apiKey}/${name}`, requestOptions)
@@ -103,6 +79,14 @@ async function getMovieObject(name) {
                 }
                 movie.reviews.push(review)            
             }
+            return fetch(`https://g.tenor.com/v1/search?key=${gifApiKey}&q=${name}&limit=${lmt}`, requestOptions)
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(result =>{
+            movie.gifs = result.results[0].media[0].gif.url;
+            console.log(movie.gifs)
         })
 
     return movie;
@@ -120,24 +104,31 @@ function addMovieToLS(movie) {
 }
 
 submitButton.addEventListener('click', submitSearch);
+// submitButton.addEventListener('click', getApi );
+
+
 
 function renderResults(movie) {
     var newContainer = document.createElement('div'); //creates a container for query
     var listItem = document.createElement('h1'); //creates an h1 for the title
     var posterItem = document.createElement('img'); //creates an img for the poster
     var descItem = document.createElement('p'); // creates a p for the description
-    var buttonItem = document.createElement('button');// creates a link when clicked on poster
+    var linkItem = document.createElement('a');// creates a link when clicked on poster
+    var gifItem = document.createElement('img');
     //sets the class of the elements
-    buttonItem.id = movie.id; //sets the id of the link to the movie id
-    buttonItem.className = "posterButton"
+    gifItem.className = "tenor-gif"
+    linkItem.id = movie.id; 
+    linkItem.className = "posterLink"
     newContainer.className = "newMovieItem";
+    document.getElementById
+    newContainer.onclick="selectFocus()"
     posterItem.className = "poster"; 
     listItem.className = "movietitle";
     descItem.className = "description";
     // adds the query container to the #list parent
     listEl.appendChild(newContainer)
     // sets poster source to the first of the response array, then adds it to the new container
-    newContainer.appendChild(buttonItem)
+    newContainer.appendChild(linkItem)
     // sets the title to the text of the first response array, then adds it to the new container
     listItem.textContent = movie.title
     newContainer.appendChild(listItem)
@@ -146,70 +137,42 @@ function renderResults(movie) {
     newContainer.appendChild(descItem)
     // makes the link a child of the img
     posterItem.src = movie.image
-    buttonItem.appendChild(posterItem)
+    linkItem.appendChild(posterItem)
 
     // poster
-    // var posterId = document.querySelector('#'+`${movie.id}`)
-    // posterId.href = movie.trailer
-    // posterId.target = "_blank"
+    var posterId = document.querySelector('#'+`${movie.id}`)
+    posterId.href = movie.trailer
+    posterId.target = "_blank"
 
-    // create Modal
+    // Reviews
 
-    var outerModal = document.createElement('div');
-    mainContain.appendChild(outerModal)
-    outerModal.className = "outerModal";
-    outerModal.id = 
-    outerModal.innerHTML = `
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <div class="modal-header">
-            <h2>${movie.title}</h2>
-            <p>${movie.description}</p>
-        </div>
-        <div class="modal-body">
-                <p>"${movie.reviews[0].review}"</p>
-                <p class=""><i class="fa-solid fa-angle-right"></i> ${movie.reviews[0].publisher}, Rating: ${movie.reviews[0].rating}</p><br>
+    var reviewContainer = document.createElement('div');
+    reviewContainer.className = "reviewContainer"
+    reviewContainer.id = `${movie.id}`
+    newContainer.appendChild(reviewContainer)
 
-                <p>"${movie.reviews[1].review}"</p>
-                <p><i class="fa-solid fa-angle-right"></i> ${movie.reviews[1].publisher}, Rating: ${movie.reviews[1].rating}</p><br>
+    gifItem.src = movie.gifs
+    reviewContainer.appendChild(gifItem) 
 
-                <p>"${movie.reviews[2].review}"</p>
-                <p><i class="fa-solid fa-angle-right"></i> ${movie.reviews[2].publisher}, Rating: ${movie.reviews[2].rating}</p><br>
-        </div>
-    </div>`;
+    var reviewList = document.createElement('div');
+    reviewList.className = "reviewList"
+    reviewContainer.appendChild(reviewList)
 
-    // var innerModal = document.createElement('div');
-    // innerModal.className = "innerModal";
+    reviewList.innerHTML = `
+    <p class ="reviews"><span class="quote">"</span>${movie.reviews[0].review}<span class="quote">"</span></p>
+    <p class ="publisher"><i class="fa-solid fa-angle-right"></i> ${movie.reviews[0].publisher}, ${movie.reviews[0].rating}</p>
 
+    <p class ="reviews"><span class="quote">"</span>${movie.reviews[1].review}<span class="quote">"</span></p>
+    <p class ="publisher"><i class="fa-solid fa-angle-right"></i> ${movie.reviews[1].publisher}, ${movie.reviews[1].rating}</p>
+    
+    <p class ="reviews"><span class="quote">"</span>${movie.reviews[2].review}<span class="quote">"</span></p>
+    <p class ="publisher"><i class="fa-solid fa-angle-right"></i> ${movie.reviews[2].publisher}, ${movie.reviews[2].rating}</p>`
+};
 
-
-    // reviews
-
-    // var reviewContainer = document.createElement('div');
-    // reviewContainer.className = "reviewContainer";
-    // newContainer.appendChild(reviewContainer)
-
-    // var reviewList = document.createElement('ul')
-    // reviewList.className = "reviewList"
-    // reviewContainer.appendChild(reviewList);
-
-    // reviewList.innerHTML = `
-    // <li>${movie.reviews[0].publisher}</li>
-    // <li>${movie.reviews[0].rating}</li>
-    // <li>${movie.reviews[0].review}</li>
-
-    // <li>${movie.reviews[1].publisher}</li>
-    // <li>${movie.reviews[1].rating}</li>
-    // <li>${movie.reviews[1].review}</li>`
-
-    /*     let movie = { 
-        id: null,
-        title: null,
-        description: null,
-        image: null,
-        trailer: null,
-        reviews: []
-    }; */
-}
-
-// buttonItem.addEventListener('click', )
+$('#view-button').click(function(){
+    if($('.reviewContainer').css('display') === 'none'){
+        $('.reviewContainer').show( "drop")
+    } else {
+        $('.reviewContainer').hide( "drop")
+    }
+})
