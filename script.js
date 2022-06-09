@@ -9,6 +9,9 @@ var apiKey = 'k_xha8cnzd'
 const gifApiKey = "YOC5GD9RH1V8";
 const lmt = 1;
 
+var moviesLogged = []
+
+
 // boilerplate request options for imbd api
 var requestOptions = {
     method: 'GET',
@@ -40,7 +43,7 @@ var submitSearch = (event) => {
 }
 
 async function getMovieObject(name) {
-    let movie = { 
+    let movie = [{ 
         id: null,
         title: null,
         description: null,
@@ -48,7 +51,7 @@ async function getMovieObject(name) {
         trailer: null,
         reviews: [],
         gifs: null
-    };
+    }];
 
     await fetch(`https://imdb-api.com/API/SearchMovie/${apiKey}/${name}`, requestOptions)
         .then(response => response.json())
@@ -85,7 +88,6 @@ async function getMovieObject(name) {
         })
         .then(result =>{
             movie.gifs = result.results[0].media[0].gif.url;
-            console.log(movie.gifs)
         })
 
     return movie;
@@ -108,6 +110,7 @@ submitButton.addEventListener('click', submitSearch);
 
 
 function renderResults(movie) {
+    moviesLogged.push(movie.id)
     var newContainer = document.createElement('div'); //creates a container for query
     var listItem = document.createElement('h1'); //creates an h1 for the title
     var posterItem = document.createElement('img'); //creates an img for the poster
@@ -119,6 +122,7 @@ function renderResults(movie) {
     linkItem.id = movie.id; 
     linkItem.className = "posterLink"
     newContainer.className = "newMovieItem";
+    newContainer.id = movie.id
     document.getElementById
     newContainer.onclick="selectFocus()"
     posterItem.className = "poster"; 
@@ -175,3 +179,24 @@ $('#view-button').click(function(){
         $('.reviewContainer').hide( "drop")
     }
 })
+
+
+// randomNumberGen
+$('#random-button').click(function(){
+    
+    $('.newMovieItem').hide()
+
+    
+    // $('#random-button').hide("drop")
+
+    let randomMovieIndex = Math.floor(Math.random() * moviesLogged.length);
+    var randomMovieSelected = moviesLogged[randomMovieIndex]
+    selectedMovie = randomMovieSelected
+    renderRandomMovie()
+})
+
+function renderRandomMovie(){
+    var selectCall = ("#" + selectedMovie)
+    $(selectCall).show()
+    
+}
