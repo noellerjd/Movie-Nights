@@ -27,6 +27,7 @@ body{
 .MNtitle{
   display: flex;
   color: var(--mid);
+  cursor: default;
 }
 #search-form{
   /* background-color: var(--white); */
@@ -128,7 +129,8 @@ body{
   display: inline-flex;
   width: auto;
 }
-.detail-btn{
+.detail-btn, 
+.random-btn{
   background-color: var(--mid);
   width: 50px;
   height: 30px;
@@ -136,7 +138,8 @@ body{
   padding-right: 10px; 
   transition: all ease 0.3s ;
 }
-.detail-btn:hover{
+.detail-btn:hover,
+.random-btn:hover{
   background-color: var(--light);
 }
 .tenor-gif{
