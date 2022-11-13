@@ -16,7 +16,7 @@ An idea for future development could include querying live streaming networks so
 To access Movie Nights, please visit https://noellerjd.github.io/Movie-Nights/ .
 
 ## Usage
-Using Movie Nights is easy. Click on the search bar and enter a movie name. The all relevant results will be displayed.
+Using Movie Nights is easy. Click on the search bar and enter a movie name. Then all relevant results will be displayed.
 
 ## Credits
 The following individuals collaborated on this project (link to GitHub included):
